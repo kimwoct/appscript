@@ -40,12 +40,6 @@ function getColumnDigit(column_name) {
   return col;
 }
 
-function main() {
-  console.log(getColumnDigit('D'));
-  console.log(getColumnDigit('AA'));
-  console.log(getColumnDigit('AAA'));
-}
-
 // Step 1: Create new sheet for each teacher
 function createNewSheetWithTEACHERCODE() {
   // Obtain teacher code sheer from column C6 to C60 and skip empty row
@@ -68,6 +62,7 @@ function createNewSheetWithTEACHERCODE() {
 function copyTemplateToSheer() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var teacherNames = getTeacherNamesSheer();
+  const TEACHER_CODE_SHEER = getTeacherCodeSheer();
 
   var templateSheet = ss.getSheetByName('template');
   var templateData = templateSheet.getDataRange().getValues();
@@ -120,7 +115,6 @@ function copyLessonInfoForMonday() {
 
 //Step 3: Copy lesson info for Tuesday
 //From Source U to AK = 21	22	23	24	25	26	27	28	29	30	31	32	33	34	35	36	37
-//Skip Destination row: 0, 5, 8, 11, 12
 function copyLessonInfoForTuesday() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sourceSheet = ss.getSheetByName("總教師時間表");
@@ -150,7 +144,7 @@ function copyLessonInfoForTuesday() {
 }
 
 // Step 3: Copy lesson info for Wednesday
-// From Source AL to BB = 38	39	40	41	42	43	44	45	46	47	48	49	50	51	52	53	54
+// From Source AL to BA = 38	39	40	41	42	43	44	45	46	47	48	49	50	51	52	53
 function copyLessonInfoForWednesday() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sourceSheet = ss.getSheetByName("總教師時間表");
@@ -167,20 +161,31 @@ function copyLessonInfoForWednesday() {
 
     if (sourceSheet && destSheet) {
       var sourceRow = SKIP_COUNT + i;
-      var sourceRange = sourceSheet.getRange(sourceRow, BEGIN_COLUMN_INDEX, 1, MAX_LESSON_COUNT); // AL to BB
+      var sourceRange = sourceSheet.getRange(sourceRow, BEGIN_COLUMN_INDEX, 1, MAX_LESSON_COUNT); // AL to BA
       var rowValues = sourceRange.getValues()[0];
-      var transformedColValues = [];
+      // var transformedColValues = [];
+      // var lessonIdx = 0;
+      // for (var j = 0; j < MAX_LESSON_COUNT; j++) {
+      //   transformedColValues.push([rowValues[lessonIdx++]]);
+      // }
+      // destSheet.getRange(4, getColumnDigit('G'), MAX_LESSON_COUNT, 1).setValues(transformedColValues); // F4:F20
+      var insertBlankIndexes = [15];
+      var paddedColValues = [];
       var lessonIdx = 0;
       for (var j = 0; j < MAX_LESSON_COUNT; j++) {
-        transformedColValues.push([rowValues[lessonIdx++]]);
+        if (insertBlankIndexes.indexOf(j) !== -1) {
+          paddedColValues.push([""]);
+        } else {
+          paddedColValues.push([rowValues[lessonIdx++]]);
+        }
       }
-      destSheet.getRange(4, getColumnDigit('F'), MAX_LESSON_COUNT, 1).setValues(transformedColValues); // F4:F20
+      destSheet.getRange(4, getColumnDigit('F'), MAX_LESSON_COUNT, 1).setValues(paddedColValues); // F4:F20
     }
   }
 }
 
 // Step 3: Copy lesson info for Thursday
-// From Source BC to BS = 55	56	57	58	59	60	61	62	63	64	65	66	67	68	69	70	71
+// From Source BB to BR = 54	55	56	57	58	59	60	61	62	63	64	65	66	67	68	69	70
 function copyLessonInfoForThursday() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sourceSheet = ss.getSheetByName("總教師時間表");
@@ -189,7 +194,7 @@ function copyLessonInfoForThursday() {
   var MAX_LESSON_COUNT = 17;
   var SKIP_COUNT = 6;
 
-  var BEGIN_COLUMN_INDEX = getColumnDigit('BC');//Corresponding to column BC
+  var BEGIN_COLUMN_INDEX = getColumnDigit('BB');//Corresponding to column BC
 
   for (var i = 0; i < TEACHER_NAME_ORDER_INDIVIDUAL_SHEER.length; i++) {
     var teacherSheetName = TEACHER_NAME_ORDER_INDIVIDUAL_SHEER[i];
@@ -197,8 +202,8 @@ function copyLessonInfoForThursday() {
 
     if (sourceSheet && destSheet) {
       var sourceRow = SKIP_COUNT + i;
-      var sourceRange = sourceSheet.getRange(sourceRow, BEGIN_COLUMN_INDEX, 1, MAX_LESSON_COUNT); // BC to BS
-      var rowValues = sourceRange.getValues()[0]; // [val1, val2, ..., val11]
+      var sourceRange = sourceSheet.getRange(sourceRow, BEGIN_COLUMN_INDEX, 1, MAX_LESSON_COUNT); // BB to BR
+      var rowValues = sourceRange.getValues()[0];
       var transformedColValues = [];
       var lessonIdx = 0;
       for (var j = 0; j < MAX_LESSON_COUNT; j++) {
@@ -210,7 +215,7 @@ function copyLessonInfoForThursday() {
 }
 
 //Step 3: Copy lesson info for Friday
-//From Source BT to CI = 72	73	74	75	76	77	78	79	80	81	82	83	84	85	86	87
+//From Source BS to CH = 71	72	73	74	75	76	77	78	79	80	81	82	83	84	85	86
 function copyLessonInfoForFriday() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sourceSheet = ss.getSheetByName("總教師時間表");
@@ -219,7 +224,7 @@ function copyLessonInfoForFriday() {
   var MAX_LESSON_COUNT = 17;
   var SKIP_COUNT = 6;
 
-  var BEGIN_COLUMN_INDEX = getColumnDigit('BT');//Corresponding to column BT
+  var BEGIN_COLUMN_INDEX = getColumnDigit('BS');//Corresponding to column BS
 
   for (var i = 0; i < TEACHER_NAME_ORDER_INDIVIDUAL_SHEER.length; i++) {
     var teacherSheetName = TEACHER_NAME_ORDER_INDIVIDUAL_SHEER[i];
@@ -227,7 +232,7 @@ function copyLessonInfoForFriday() {
 
     if (sourceSheet && destSheet) {
       var sourceRow = SKIP_COUNT + i;
-      var sourceRange = sourceSheet.getRange(sourceRow, BEGIN_COLUMN_INDEX, 1, MAX_LESSON_COUNT); // BT to CI
+      var sourceRange = sourceSheet.getRange(sourceRow, BEGIN_COLUMN_INDEX, 1, MAX_LESSON_COUNT); // BS to CH
       var rowValues = sourceRange.getValues()[0]; // [val1, val2, ..., val11]
       // var transformedColValues = [];
       // var lessonIdx = 0;
@@ -245,7 +250,7 @@ function copyLessonInfoForFriday() {
           paddedColValues.push([rowValues[lessonIdx++]]);
         }
       }
-      destSheet.getRange(4, getColumnDigit('H'), MAX_LESSON_COUNT, 1).setValues(paddedColValues); // H4:H19
+      destSheet.getRange(4, getColumnDigit('H'), MAX_LESSON_COUNT, 1).setValues(paddedColValues); // H4:H20
     }
   }
 }
