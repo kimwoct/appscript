@@ -50,23 +50,63 @@ function getTeacherNames() {
   var normalizedSet = new Set();
 
   sheets.forEach(function (sheet) {
-    var row1 = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    var lastCol = sheet.getLastColumn();
+    var row1 = [];
+    if (lastCol > 0) {
+      var values = sheet.getRange(1, 1, 1, lastCol).getValues();
+      if (values && values.length > 0) {
+        row1 = values[0];
+      }
+    }
     var filtered = row1.filter(function (value) {
       return value !== "" && value.trim() !== "";
     });
     results[sheet.getName()] = filtered;
-    // Add unique teacher names from filtered
     filtered.forEach(function (name) {
       var normalized = normalizeName(name);
       if (normalized && !normalizedSet.has(normalized)) {
-        teacherNames.push(name); // Store original
+        teacherNames.push(normalized); 
+        // Store original string
         normalizedSet.add(normalized);
+        // Logger.log('Raw: ' + name + ', Normalized: ' + normalized);
       }
     });
-    //Logger.log('Sheet: ' + sheet.getName() + ' | Row 1: ' + filtered.join(","));
   });
-  //Logger.log(results);
-  Logger.log('Results: ' + teacherNames);
+  Logger.log('getTeacherNames() - Results: ' + teacherNames);
+  return teacherNames;
+}
+
+function getTeacherNamesAndCode() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var results = {};
+  var teacherNames = [];
+  var normalizedSet = new Set();
+
+  sheets.forEach(function (sheet) {
+    var lastCol = sheet.getLastColumn();
+    var row1 = [];
+    if (lastCol > 0) {
+      var values = sheet.getRange(1, 1, 1, lastCol).getValues();
+      if (values && values.length > 0) {
+        row1 = values[0];
+      }
+    }
+    var filtered = row1.filter(function (value) {
+      return value !== "" && value.trim() !== "";
+    });
+    results[sheet.getName()] = filtered;
+    filtered.forEach(function (name) {
+      var normalized = normalizeName(name);
+      if (normalized && !normalizedSet.has(normalized)) {
+        teacherNames.push(name); 
+        // Store original string
+        normalizedSet.add(normalized);
+        // Logger.log('Raw: ' + name + ', Normalized: ' + normalized);
+      }
+    });
+  });
+  Logger.log('getTeacherNames() - Results: ' + teacherNames);
   return teacherNames;
 }
 
@@ -74,8 +114,9 @@ function getTeacherNames() {
 function createSheetsForAllTeacherCodes() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   // var teacherCode = ['琪', '楊', '芬', '程', '彤', '鄧', '梁', '美', '曉', '善', '敏', '雋', '麗', '雅', '黃', '芝', '譚', '紫', '藹', '珈', '尹', '馮', '顏', '翠', '朱', '葉', '言', '潘', '豪', '仁', '儀', '陳', '旭', '詩', 'A', 'K', 'S'];
-  var teacherCode = getTeacherCodes();
+  var teacherCode = extractTeacherCodes();
   var existingSheets = ss.getSheets().map(function (sheet) { return sheet.getName(); });
+  Logger.log('Existing Sheets: ' + existingSheets);
 
   for (var i = 0; i < teacherCode.length; i++) {
     var name = teacherCode[i];
@@ -95,8 +136,8 @@ function copyTemplateToSheer() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   // var teacherNames = ['羅宇(琪)(1A)', '(楊)麗芳(1A)', '姚寶(芬)(1B)', '林鐃(程)(1B)', '葉兆(彤)(2A)', '(鄧)海玲(2B)', '(梁)思晴(3A)', '李(美)姍(3B)', '楊(曉)怡(4A)', '林(善)嬴(4B)', '王彥(敏)(5A)', '黃(雋)之(5B)', '王(麗)蓮(6A)', '劉(雅)恩(6B)', '(黃)俊基(6C)', '陳晉(芝)(6D)', '(譚)曉嵐', '鄧(紫)晴', '陳(藹)儀', '李(珈)琳', '(尹)兆恒', '(馮)碧珊', '(顏)詠詩', '王(翠)儀', '(朱)明霞', '(葉)曉文', '李海(言)', '(潘)國光', '李志(豪)', '潘濬仁(仁)', '容淑(儀)', '(陳)振秋', '黃(旭)俊', '梁美(詩)', 'ALLYSON HOLDER(NET)', 'KARY', 'SENTA (NCS)'];
   // var teacherCode = ['琪', '楊', '芬', '程', '彤', '鄧', '梁', '美', '曉', '善', '敏', '雋', '麗', '雅', '黃', '芝', '譚', '紫', '藹', '珈', '尹', '馮', '顏', '翠', '朱', '葉', '言', '潘', '豪', '仁', '儀', '陳', '旭', '詩', 'A', 'K', 'S'];
-  var teacherNames = getTeacherNames();
-  var teacherCode = getTeacherCodes();
+  var teacherNames = extractTeacherNames();
+  var teacherCode = extractTeacherCodes();
   var templateSheet = ss.getSheetByName('Template1');
   var templateData = templateSheet.getDataRange().getValues();
 
@@ -116,27 +157,30 @@ function copyTemplateToSheer() {
 }
 
 //Step 4: Copy the lesson info from original sheer from teacher names
-/*B4:G18 -> D4:I18*/
 function copyLessonInfo() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   // var teacherCode = ['琪', '楊', '芬', '程', '彤', '鄧', '梁', '美', '曉', '善', '敏', '雋', '麗', '雅', '黃', '芝', '譚', '紫', '藹', '珈', '尹', '馮', '顏', '翠', '朱', '葉', '言', '潘', '豪', '仁', '儀', '陳', '旭', '詩', 'A', 'K', 'S'];
   // var teacherSheers = ['羅宇琪', '楊麗芳', '姚寶芬', '林鐃程', '葉兆彤', '鄧海玲', '梁思晴', '李美姍', '楊曉怡', '林善嬴', '王彥敏', '黃雋之', '王麗蓮', '劉雅恩', '黃俊基', '陳晉芝', '譚曉嵐', '鄧紫晴', '陳藹儀', '李珈琳', '尹兆恒', '馮碧珊', '顏詠詩', '王翠儀', '朱明霞', '葉曉文', '李海言', '潘國光', '李志豪', '潘濬仁', '容淑儀', '陳振秋', '黃旭俊', '梁美詩', 'ＮＥＴ', 'ＫＡＲＹ', 'ＳＥＮＴＡ'];
-  var teacherSheers = getTeacherNames();
-  var teacherCode = getTeacherCodes();
+  var teacherSheers = extractTeacherNames();
+  var teacherCode = extractTeacherCodes();
 
   for (var i = 0; i < teacherCode.length; i++) {
     var sourceSheet = ss.getSheetByName(teacherSheers[i]);
     var destSheet = ss.getSheetByName(teacherCode[i]);
     if (sourceSheet && destSheet) {
       var sourceRange = sourceSheet.getRange("C3:H18");
+      var destRange = destSheet.getRange("D5:I20");
       var values = sourceRange.getValues();
-      destSheet.getRange("D5:I20").setValues(values);
+      var backgrounds = sourceRange.getBackgrounds();
+      destRange.setValues(values);
+      destRange.setBackgrounds(backgrounds); // Copy cell backgrounds
       Logger.log("Copied for: " + teacherSheers[i] + " -> " + teacherCode[i]);
     } else {
       Logger.log("Missing sheet for: " + teacherSheers[i] + " or " + teacherCode[i]);
     }
   }
 }
+
 
 //Step 5: Update the lesson info to remove all newline characters from teacher code
 function updateLessonInfo() {
@@ -237,49 +281,48 @@ function add當值s() {
 }
 
 /* ----------------Test Cases Below---------------- */
-function extractTeacherName() {
+function extractTeacherNames() {
   var teacherNames = getTeacherNames(); // Assumes array of name strings
-  var cleaned = teacherNames.map(function (name) {
-    // Remove trailing class code like "(6B)", "6B" with optional spaces
-    var noClass = name.replace(/\s*\(?\d[A-D]\)?\s*$/i, '');
-    // Remove all parentheses but keep their contents
-    var zhName = noClass.replace(/[()]/g, '');
-    // Remove all spaces
-    zhName = zhName.replace(/\s+/g, '');
-    return zhName;
-  });
+
   // Remove duplicates
-  var resultArray = Array.from(new Set(cleaned));
-  Logger.log('Results: ' + resultArray);
+  var resultArray = Array.from(new Set(teacherNames));
+  resultArray = resultArray.map(function (name) {
+    if (name === "潘濬仁仁") return "潘濬仁";
+    if (name === "ALLYSONHOLDERNET") return "ALLYSON HOLDER";
+    if (name === "SENTANCS") return "SENTA";
+    return name;
+  });
+  Logger.log('extractTeacherNames() - Results: ' + resultArray);
   Logger.log('Is Array: ' + Array.isArray(resultArray));
   return resultArray;
 }
 
 function extractTeacherCodes() {
-  var teacherNames = getTeacherNames(); // Array of name strings
+  var teacherNames = getTeacherNamesAndCode(); // Array of name strings
 
   // Collect codes: find all Chinese chars in parentheses, skip class or staff codes
   var codeSet = new Set(
     teacherNames
-      .map(function(name) {
+      .map(function (name) {
         // Only extract Chinese character codes inside parentheses, e.g. (美), (善)
         var codeMatch = name.match(/\(([\u4e00-\u9fa5]{1,3})\)/);
         // Return with single quotes, e.g. '美'
-        return codeMatch ? "'" + codeMatch[1] + "'" : null;
+        return codeMatch ? codeMatch[1] : null;
       })
-      .filter(function(code) { return code !== null; })
+      .filter(function (code) { return code !== null; })
   );
 
-  // Add 'A', 'K', 'S'
-  codeSet.add("'A'");
-  codeSet.add("'K'");
-  codeSet.add("'S'");
+  // Add 'A', 'K'
+  codeSet.add("A");
+  codeSet.add("K");
 
   var results = Array.from(codeSet);
   Logger.log('Teacher codes: ' + results);
   Logger.log('Is Array: ' + Array.isArray(results));
-  return [results];
+  return results;
 }
+//琪,楊,芬,程,彤,鄧,梁,美,曉,善,敏,雋,麗,雅,黃,芝,譚,紫,藹,珈,尹,馮,顏,朱,葉,言,潘,豪,仁,容,陳,旭,詩,A,K,
+//楊麗芳,姚寶芬,林鐃程,葉兆彤,鄧海玲,梁思晴,李美姍,楊曉怡,林善嬴,王彥敏,黃雋之,王麗蓮,劉雅恩,黃俊基,陳晉芝,譚曉嵐,鄧紫晴,陳藹儀,李珈琳,尹兆恒,馮碧珊,顏詠詩,王（翠）儀,朱明霞,葉曉文,李海言,潘國光,李志豪,潘濬仁,容淑儀,陳振秋,黃旭俊,梁美詩,ALLYSON HOLDER,KARY
 
 // Test Case 1:
 function compareTeacherCodes() {
@@ -306,7 +349,7 @@ function compareTeacherCodes() {
 
 function generateTeacherMappingTable(rawArray) {
   var mapping = {};
-  rawArray.forEach(function(item) {
+  rawArray.forEach(function (item) {
     item = item.trim();
 
     // English name handling: e.g., ALLYSON HOLDER(NET), KARY, SENTA (NCS)
@@ -342,7 +385,7 @@ function getTeacherMappingTable() {
   var mapping = {};
   mapping = generateTeacherMappingTable(getTeacherNames());
 
-   // Build array of single-key objects
+  // Build array of single-key objects
   const arr = Object.entries(mapping).map(([key, value]) => ({ [key]: value }));
 
   Logger.log("var MAPPING_TABLE = " + JSON.stringify(arr, null, 2) + ";");
@@ -352,14 +395,15 @@ function getTeacherMappingTable() {
 }
 
 function normalizeName(name) {
-  if (!name) return "";
-  // Convert all full-width parentheses to half-width
-  let norm = name.replace(/[（）]/g, function (s) { return s === "（" ? "(" : ")"; });
-  // Replace multiple spaces with a single space
-  norm = norm.replace(/\s+/g, " ");
-  // Trim leading/trailing whitespace
-  norm = norm.trim();
-  return norm;
+  // Logger.log("Input name: " + name);
+  // Remove class codes in parens at the end
+  var noClass = name.replace(/\s*\(?\d[A-D]\)?\s*$/i, '');
+  // Remove all parentheses (but keep inside)
+  var cleaned = noClass.replace(/[()]/g, '');
+  // Remove all spaces
+  cleaned = cleaned.replace(/\s+/g, '');
+  // Logger.log("Cleaned name: " + cleaned);
+  return cleaned;
 }
 
 // Remark all teachers from last year not existing in this year
