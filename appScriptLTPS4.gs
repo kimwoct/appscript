@@ -46,7 +46,7 @@ var MAPPING_TABLE = [
 // Test3 : getTeacherNamesCode() - Results: 羅宇(琪) (1A) ,(楊)麗芳 (1A),姚寶(芬) (1B),林鐃(程) (1B),葉兆(彤) (2A),(鄧)海玲 (2B),(梁)思晴 (3A),李(美)姍 (3B),楊(曉)怡 (4A),林(善)嬴 (4B),王彥(敏) (5A),黃(雋)之 (5B) ,王(麗)蓮 (6A),劉(雅)恩 (6B),(黃)俊基 (6C),陳晉(芝) (6D),(譚)曉嵐,鄧(紫)晴,陳(藹)儀,李(珈)琳,(尹)兆恒,(馮)碧珊,(顏)詠詩,王(翠)儀 ,(朱)明霞,(葉)曉文,李海(言),(潘)國光,李志(豪),潘濬(仁),(容)淑儀,(陳)振秋 ,黃(旭)俊 ,梁美(詩),ALLYSON HOLDER,KARY
 // Test4 : extractTeacherCodes() - Results: 琪,楊,芬,程,彤,鄧,梁,美,曉,善,敏,雋,麗,雅,黃,芝,譚,紫,藹,珈,尹,馮,顏,翠,朱,葉,言,潘,豪,仁,容,陳,旭,詩,A,K
 
-var SHEET_NAMES = ["羅宇琪","楊麗芳","姚寶芬","林鐃程","葉兆彤","鄧海玲","梁思晴","李美姍","楊曉怡","林善嬴","王彥敏","黃雋之","王麗蓮","劉雅恩","黃俊基","陳晉芝","譚曉嵐","鄧紫晴","陳藹儀","李珈琳","尹兆恒","馮碧珊","顏詠詩","王翠儀","朱明霞","葉曉文","李海言","潘國光","李志豪","潘濬仁","容淑儀","陳振秋","黃旭俊","梁美詩","ＮＥＴ","ＫＡＲＹ"];
+var SHEET_NAMES = ["羅宇琪", "楊麗芳", "姚寶芬", "林鐃程", "葉兆彤", "鄧海玲", "梁思晴", "李美姍", "楊曉怡", "林善嬴", "王彥敏", "黃雋之", "王麗蓮", "劉雅恩", "黃俊基", "陳晉芝", "譚曉嵐", "鄧紫晴", "陳藹儀", "李珈琳", "尹兆恒", "馮碧珊", "顏詠詩", "王翠儀", "朱明霞", "葉曉文", "李海言", "潘國光", "李志豪", "潘濬仁", "容淑儀", "陳振秋", "黃旭俊", "梁美詩", "ＮＥＴ", "ＫＡＲＹ"];
 
 //Step 1: get all the sheet names
 function getSheetNames() {
@@ -61,7 +61,7 @@ function getSheetNames() {
   return results;
 }
 
-var TEACHER_NAMES = ["羅宇琪","楊麗芳","姚寶芬","林鐃程","葉兆彤","鄧海玲","梁思晴","李美姍","楊曉怡","林善嬴","王彥敏","黃雋之","王麗蓮","劉雅恩","黃俊基","陳晉芝","譚曉嵐","鄧紫晴","陳藹儀","李珈琳","尹兆恒","馮碧珊","顏詠詩","王翠儀","朱明霞","葉曉文","李海言","潘國光","李志豪","潘濬仁","容淑儀","陳振秋","黃旭俊","梁美詩","ALLYSONHOLDER","KARY"];
+var TEACHER_NAMES = ["羅宇琪", "楊麗芳", "姚寶芬", "林鐃程", "葉兆彤", "鄧海玲", "梁思晴", "李美姍", "楊曉怡", "林善嬴", "王彥敏", "黃雋之", "王麗蓮", "劉雅恩", "黃俊基", "陳晉芝", "譚曉嵐", "鄧紫晴", "陳藹儀", "李珈琳", "尹兆恒", "馮碧珊", "顏詠詩", "王翠儀", "朱明霞", "葉曉文", "李海言", "潘國光", "李志豪", "潘濬仁", "容淑儀", "陳振秋", "黃旭俊", "梁美詩", "ALLYSONHOLDER", "KARY"];
 
 //Step 1: get all the teacher names
 function getTeacherNames() {
@@ -102,7 +102,7 @@ function getTeacherNames() {
   return results;
 }
 
-TEACHER_NAMES = ["羅宇琪","楊麗芳","姚寶芬","林鐃程","葉兆彤","鄧海玲","梁思晴","李美姍","楊曉怡","林善嬴","王彥敏","黃雋之","王麗蓮","劉雅恩","黃俊基","陳晉芝","譚曉嵐","鄧紫晴","陳藹儀","李珈琳","尹兆恒","馮碧珊","顏詠詩","王翠儀","朱明霞","葉曉文","李海言","潘國光","李志豪","潘濬仁","容淑儀","陳振秋","黃旭俊","梁美詩","ALLYSON HOLDER","KARY"];
+TEACHER_NAMES = ["羅宇琪", "楊麗芳", "姚寶芬", "林鐃程", "葉兆彤", "鄧海玲", "梁思晴", "李美姍", "楊曉怡", "林善嬴", "王彥敏", "黃雋之", "王麗蓮", "劉雅恩", "黃俊基", "陳晉芝", "譚曉嵐", "鄧紫晴", "陳藹儀", "李珈琳", "尹兆恒", "馮碧珊", "顏詠詩", "王翠儀", "朱明霞", "葉曉文", "李海言", "潘國光", "李志豪", "潘濬仁", "容淑儀", "陳振秋", "黃旭俊", "梁美詩", "ALLYSON HOLDER", "KARY"];
 function extractTeacherNames() {
   var teacherNames = getTeacherNames(); // Assumes array of name strings
 
@@ -119,7 +119,7 @@ function extractTeacherNames() {
   return resultArray;
 }
 
-var TEACHER_CODES = ["琪","楊","芬","程","彤","鄧","梁","美","曉","善","敏","雋","麗","雅","黃","芝","譚","紫","藹","珈","尹","馮","顏","翠","朱","葉","言","潘","豪","仁","容","陳","旭","詩","A","K"];
+var TEACHER_CODES = ["琪", "楊", "芬", "程", "彤", "鄧", "梁", "美", "曉", "善", "敏", "雋", "麗", "雅", "黃", "芝", "譚", "紫", "藹", "珈", "尹", "馮", "顏", "翠", "朱", "葉", "言", "潘", "豪", "仁", "容", "陳", "旭", "詩", "A", "K"];
 function extractTeacherCodes() {
   var teacherNamesAndCodes = getTeacherNamesAndCodes(); // Array of name strings
   var teacherCodes = [];
@@ -174,7 +174,7 @@ function getTeacherNamesAndCodes() {
     filtered.forEach(function (name) {
       var normalized = normalizeName(name);
       if (normalized && !normalizedSet.has(normalized)) {
-        teacherNames.push(name); 
+        teacherNames.push(name);
         // Store original string
         normalizedSet.add(normalized);
         // Logger.log('Raw: ' + name + ', Normalized: ' + normalized);
@@ -250,7 +250,18 @@ function copyLessonInfo() {
       var destRange = destSheet.getRange("D5:I20");
       var values = sourceRange.getValues();
       var backgrounds = sourceRange.getBackgrounds();
-      destRange.setValues(values);
+
+      // Mark yellow cells in values array
+      var updatedValues = values.map(function (row, r) {
+        return row.map(function (cell, c) {
+          if (backgrounds[r][c] === '#ffff00') {
+            return cell + '#Special';
+          }
+          return cell;
+        });
+      });
+
+      destRange.setValues(updatedValues);
       destRange.setBackgrounds(backgrounds); // Copy cell backgrounds
       results.push(teacherSheers[i] + " -> " + teacherCode[i]);
     } else {
@@ -270,24 +281,38 @@ function updateLessonInfo() {
       var destRange = destSheet.getRange("D5:I20");
       var values = destRange.getValues();
 
-      // Process each cell: convert multiline to single line using custom logic
       for (var r = 0; r < values.length; r++) {
         for (var c = 0; c < values[0].length; c++) {
           var cell = values[r][c];
-          if (typeof cell === 'string') {
-            // Split into parts on newline, filter out empty lines, trim each part
-            var parts = cell.replace(/\r/g, '').split('\n').filter(Boolean).map(function (p) { return p.trim(); });
+          if (typeof cell === 'string' && cell.trim() !== '') {
+            var code = '', subject = '', roomExtra = '';
 
-            // Rebuild value
-            var result = '';
-            for (var j = 0; j < parts.length; j++) {
-              if (/^\d+$/.test(parts[j]) && j === parts.length - 1) {
-                // If last part is digits only, add a space before it
-                result += ' ' + parts[j];
-              } else {
-                result += parts[j];
-              }
+            // Normalize line breaks and multiple spaces
+            var input = cell.replace(/\r/g, '').replace(/\n/g, ' ').trim().replace(/\s+/g, ' ');
+
+            // --- Unified code matcher: (雙) 4B or 1A, etc. ---
+            var codeMatch = input.match(/^((\(.*?\)\s*)?\d{1,2}[A-Z])/);
+            if (codeMatch) {
+              code = codeMatch[1].replace(/\s+/g, ''); // Remove spaces from code, e.g. "(雙)4B"
+              input = input.slice(codeMatch[0].length).trim();
             }
+
+            // Subject: everything up to the last group of digits (room), possibly with (), NET etc.
+            var subjectMatch = input.match(/^(.+?)(\d{2,4}(?:#\S*)?)$/);
+            if (subjectMatch) {
+              subject = subjectMatch[1].trim();
+              roomExtra = subjectMatch[2].trim();
+            } else if (input) {
+              subject = input.trim();
+            }
+
+            // Build result with single spaces (avoid trailing/leading)
+            var result = [code, subject, roomExtra].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+
+            // For debug:
+            console.log('code:', code, '| subject:', subject, '| roomExtra:', roomExtra);
+            console.log('result:', result);
+
             values[r][c] = result;
           }
         }
@@ -328,7 +353,7 @@ function addPrefixSuffixToRows(rowList, prefix, suffix) {
 }
 
 //Step 6: add 班主任 7 Suffix
-function add班主任(){
+function add班主任() {
   var rowList = [7];
   addPrefixSuffixToRows(rowList, "", " 班主任");
 }

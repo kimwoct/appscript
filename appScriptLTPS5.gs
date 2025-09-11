@@ -208,8 +208,6 @@ function createSheetsForAllTeacherCodes() {
 //Step 3: Copy Template to each sheer with teacher code only
 function copyTemplateToSheer() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  // var teacherNames = ['羅宇(琪)(1A)', '(楊)麗芳(1A)', '姚寶(芬)(1B)', '林鐃(程)(1B)', '葉兆(彤)(2A)', '(鄧)海玲(2B)', '(梁)思晴(3A)', '李(美)姍(3B)', '楊(曉)怡(4A)', '林(善)嬴(4B)', '王彥(敏)(5A)', '黃(雋)之(5B)', '王(麗)蓮(6A)', '劉(雅)恩(6B)', '(黃)俊基(6C)', '陳晉(芝)(6D)', '(譚)曉嵐', '鄧(紫)晴', '陳(藹)儀', '李(珈)琳', '(尹)兆恒', '(馮)碧珊', '(顏)詠詩', '王(翠)儀', '(朱)明霞', '(葉)曉文', '李海(言)', '(潘)國光', '李志(豪)', '潘濬仁(仁)', '容淑(儀)', '(陳)振秋', '黃(旭)俊', '梁美(詩)', 'ALLYSON HOLDER(NET)', 'KARY', 'SENTA (NCS)'];
-  // var teacherCode = ['琪', '楊', '芬', '程', '彤', '鄧', '梁', '美', '曉', '善', '敏', '雋', '麗', '雅', '黃', '芝', '譚', '紫', '藹', '珈', '尹', '馮', '顏', '翠', '朱', '葉', '言', '潘', '豪', '仁', '儀', '陳', '旭', '詩', 'A', 'K', 'S'];
   var teacherNames = TEACHER_NAMES;//extractTeacherNames();
   var teacherCode = TEACHER_CODES;//extractTeacherCodes();
   var templateSheet = ss.getSheetByName('Template2');
@@ -235,10 +233,8 @@ function copyTemplateToSheer() {
 //Step 4: Copy the lesson info from original sheer from teacher names
 function copyLessonInfo() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  // var teacherCode = ['琪', '楊', '芬', '程', '彤', '鄧', '梁', '美', '曉', '善', '敏', '雋', '麗', '雅', '黃', '芝', '譚', '紫', '藹', '珈', '尹', '馮', '顏', '翠', '朱', '葉', '言', '潘', '豪', '仁', '儀', '陳', '旭', '詩', 'A', 'K', 'S'];
-  // var teacherSheers = ['羅宇琪', '楊麗芳', '姚寶芬', '林鐃程', '葉兆彤', '鄧海玲', '梁思晴', '李美姍', '楊曉怡', '林善嬴', '王彥敏', '黃雋之', '王麗蓮', '劉雅恩', '黃俊基', '陳晉芝', '譚曉嵐', '鄧紫晴', '陳藹儀', '李珈琳', '尹兆恒', '馮碧珊', '顏詠詩', '王翠儀', '朱明霞', '葉曉文', '李海言', '潘國光', '李志豪', '潘濬仁', '容淑儀', '陳振秋', '黃旭俊', '梁美詩', 'ＮＥＴ', 'ＫＡＲＹ', 'ＳＥＮＴＡ'];
-  var teacherSheers = SHEET_NAMES;//extractTeacherNames();
-  var teacherCode = TEACHER_CODES;//extractTeacherCodes();
+  var teacherSheers = SHEET_NAMES; // Or extractTeacherNames();
+  var teacherCode = TEACHER_CODES; // Or extractTeacherCodes();
   var results = [];
 
   for (var i = 0; i < teacherCode.length; i++) {
@@ -249,8 +245,20 @@ function copyLessonInfo() {
       var destRange = destSheet.getRange("D4:H5");
       var values = sourceRange.getValues();
       var backgrounds = sourceRange.getBackgrounds();
-      destRange.setValues(values);
-      destRange.setBackgrounds(backgrounds); // Copy cell backgrounds
+
+      // Mark yellow cells in values array
+      var updatedValues = values.map(function(row, r) {
+        return row.map(function(cell, c) {
+          if (backgrounds[r][c] === '#ffff00') {
+            return cell + '#Special';
+          }
+          return cell;
+        });
+      });
+
+      destRange.setValues(updatedValues);
+      destRange.setBackgrounds(backgrounds);
+
       results.push(teacherSheers[i] + " -> " + teacherCode[i]);
     } else {
       results.push(teacherSheers[i] + " -X-> " + teacherCode[i]);
@@ -258,6 +266,7 @@ function copyLessonInfo() {
   }
   Logger.log("Copied for: " + results);
 }
+
 
 //Step 5: Update the lesson info to remove all newline characters from teacher code
 function updateLessonInfo() {
@@ -269,27 +278,43 @@ function updateLessonInfo() {
       var destRange = destSheet.getRange("D4:I5");
       var values = destRange.getValues();
 
-      // Process each cell
+      // Process each cell in range
       for (var r = 0; r < values.length; r++) {
         for (var c = 0; c < values[0].length; c++) {
           var cell = values[r][c];
           if (typeof cell === 'string') {
-            // Globally remove '星期[一二三四五]:'
+            // Globally remove '星期X:'
             cell = cell.replace(/星期[一二三四五]:/g, '');
 
-            // Split into parts on newline, filter out empty lines, trim each part
-            var parts = cell.replace(/\r/g, '').split('\n').filter(Boolean).map(function (p) { return p.trim(); });
+            // Split on '/', so each lesson is handled separately
+            var lessonParts = cell.replace(/\r/g, '').split('\n').filter(Boolean).map(function(p) { return p.trim(); }).join(' ').split('/').map(function(part) { return part.trim(); });
 
-            // Rebuild value
-            var result = '';
-            for (var j = 0; j < parts.length; j++) {
-              if (/^\d+$/.test(parts[j]) && j === parts.length - 1) {
-                result += ' ' + parts[j];
-              } else {
-                result += parts[j];
+            var parsedParts = lessonParts.map(function(part) {
+              var code = '', subject = '', roomExtra = '';
+              var input = part.trim().replace(/\s+/g, ' ');
+
+              // --- Unified code detection ---
+              var codeMatch = input.match(/^((\(.*?\)\s*)?\d{1,2}[A-Z])/);
+              if (codeMatch) {
+                code = codeMatch[1].replace(/\s+/g, '');
+                input = input.slice(codeMatch[0].length).trim();
               }
-            }
-            values[r][c] = result;
+
+              // Subject: everything up to the last group of digits (room), possibly with (), NET, etc.
+              var subjectMatch = input.match(/^(.+?)(\d{2,4}(?:#\S*)?)$/);
+              if (subjectMatch) {
+                subject = subjectMatch[1].trim();
+                roomExtra = subjectMatch[2].trim();
+              } else if (input) {
+                subject = input.trim();
+              }
+
+              // Combine with spaces, avoid extra
+              return [code, subject, roomExtra].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+            });
+
+            // Join all lesson parts with ' / ' if more than one
+            values[r][c] = parsedParts.join(' / ');
           }
         }
       }
@@ -301,6 +326,7 @@ function updateLessonInfo() {
   }
   Logger.log("updateLessonInfo() - results: " + results);
 }
+
 
 
 // add Prefix Suffix To Rows
