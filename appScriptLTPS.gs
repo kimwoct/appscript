@@ -70,32 +70,6 @@ function getTeacherNames() {
   return teacherNames;
 }
 
-// Step 6: Remark all teachers from last year not existing in this year
-function getOldTeacherList() {
-  var missingTeachers = [];
-
-  for (var i = 0; i < OLD_TEACHER_LIST.length; i++) {
-    var teacher = OLD_TEACHER_LIST[i];
-    if (!NEW_TEACHER_LIST.includes(teacher)) {
-      missingTeachers.push(teacher);
-    }
-  }
-  Logger.log(missingTeachers);
-}
-
-// Step 6: Remark all teachers from this year not existing in last year
-function getNewTeacherList() {
-  var missingTeachers = [];
-
-  for (var i = 0; i < NEW_TEACHER_LIST.length; i++) {
-    var teacher = NEW_TEACHER_LIST[i];
-    if (!OLD_TEACHER_LIST.includes(teacher)) {
-      missingTeachers.push(teacher);
-    }
-  }
-  Logger.log(missingTeachers);
-}
-
 //Step 2: create sheet to from all the teacher codes
 function createSheetsForAllTeacherCodes() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -386,6 +360,32 @@ function normalizeName(name) {
   // Trim leading/trailing whitespace
   norm = norm.trim();
   return norm;
+}
+
+// Remark all teachers from last year not existing in this year
+function getOldTeacherList() {
+  var missingTeachers = [];
+
+  for (var i = 0; i < OLD_TEACHER_LIST.length; i++) {
+    var teacher = OLD_TEACHER_LIST[i];
+    if (!NEW_TEACHER_LIST.includes(teacher)) {
+      missingTeachers.push(teacher);
+    }
+  }
+  Logger.log(missingTeachers);
+}
+
+// Remark all teachers from this year not existing in last year
+function getNewTeacherList() {
+  var missingTeachers = [];
+
+  for (var i = 0; i < NEW_TEACHER_LIST.length; i++) {
+    var teacher = NEW_TEACHER_LIST[i];
+    if (!OLD_TEACHER_LIST.includes(teacher)) {
+      missingTeachers.push(teacher);
+    }
+  }
+  Logger.log(missingTeachers);
 }
 
 //Test Case 2: Find the new teacher list teacher code
