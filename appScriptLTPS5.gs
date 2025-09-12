@@ -327,7 +327,17 @@ function updateLessonInfo() {
   Logger.log("updateLessonInfo() - results: " + results);
 }
 
+//Step 6: add 班主任 7 Suffix
+// function add班主任(){
+//   var rowList = [7];
+//   addPrefixSuffixToRows(rowList, "", " 班主任");
+// }
 
+//Step 7: add 當值 5 Prefix
+function add當值() {
+  var rowList = [5];
+  addPrefixSuffixToRows(rowList, "當值 ", "");
+}
 
 // add Prefix Suffix To Rows
 function addPrefixSuffixToRows(rowList, prefix, suffix) {
@@ -347,24 +357,12 @@ function addPrefixSuffixToRows(rowList, prefix, suffix) {
       // Process each cell in the row
       for (var col = 0; col < values[0].length; col++) {
         if (values[0][col] !== "") {
-          values[0][col] = prefix + values[0][col] + suffix;
+          values[0][col] = prefix + values[0][col].replace(/\s+/g, '') + suffix;
         }
       }
       destRange.setValues(values);
     }
   }
-}
-
-//Step 6: add 班主任 7 Suffix
-// function add班主任(){
-//   var rowList = [7];
-//   addPrefixSuffixToRows(rowList, "", " 班主任");
-// }
-
-//Step 7: add 當值 5 Prefix
-function add當值() {
-  var rowList = [5];
-  addPrefixSuffixToRows(rowList, "當值 ", "");
 }
 
 /* ----------------Test Cases Below---------------- */
